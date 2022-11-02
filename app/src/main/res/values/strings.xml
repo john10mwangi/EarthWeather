@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">EarthWeather</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">My Cities</string>
+    <string name="title_notifications">Notifications</string>
+
+
+    <string name="degree_celcius">\u2103</string>
+<!--    <string name="degree_celcius">0C</string>-->
+    <string name="wind_title">Winds</string>
+    <string name="more">Show More</string>
+    <string name="search">Search</string>
+    <string name="setting">Settings</string>
+</resources>
