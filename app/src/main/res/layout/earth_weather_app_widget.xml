@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.EarthWeather.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/Theme.EarthWeather.AppWidgetContainer">
+
+    <TextView
+        android:id="@+id/appwidget_city_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/appwidget_city_temp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="@string/city_text_placeholder"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/appwidget_city_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appwidget_city_text2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="6dp"
+        android:layout_toStartOf="@+id/appwidget_city_forecast"
+        android:ellipsize="marquee"
+        android:maxLines="2"
+        android:text="@string/date_text"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <ImageView
+        android:id="@+id/weather_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_baseline_wb_sunny_24"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        />
+
+    <TextView
+        android:id="@+id/appwidget_city_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/weather_icon"
+        android:layout_alignParentEnd="true"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="@string/temp_placeholder"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/appwidget_city_forecast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appwidget_city_temp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="6dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="@string/forecast_placeholder"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+<!--    <com.google.android.material.textview.MaterialTextView-->
+<!--        android:id="@+id/city_text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Nairobi"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="24sp"-->
+<!--        />-->
+<!--    <com.google.android.material.textview.MaterialTextView-->
+<!--        android:id="@+id/city_text"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Nairobi"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="24sp"-->
+<!--        />-->
+</RelativeLayout>

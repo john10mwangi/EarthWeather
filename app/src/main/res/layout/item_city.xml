@@ -17,47 +17,42 @@
             type="com.galgolabs.earthweather.ui.dashboard.City" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:orientation="vertical"
+        app:cardCornerRadius="20dp"
+        android:layout_margin="4dp"
+        app:cardUseCompatPadding="true"
+        android:onClick="@{() -> clickCallback.onItemClickedCallback(city)}"
+        android:background="@color/cardview_dark_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/city_name"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:cardCornerRadius="20dp"
-            android:layout_margin="4dp"
-            app:cardUseCompatPadding="true"
-            android:onClick="@{() -> clickCallback.onItemClickedCallback(city)}"
-            android:background="@color/cardview_dark_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="wrap_content"
+            android:text="@{city.name}"
+            android:layout_margin="12dp"
+            android:hint="City"
+            android:textSize="24sp"
+            />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/city_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{city.name}"
-                android:layout_margin="12dp"
-                android:hint="City"
-                android:textSize="24sp"
-                />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/city_contry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{city.country}"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="12dp"
+            android:hint="Country"
+            android:textSize="16sp"
+            />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/city_contry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{city.country}"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginBottom="12dp"
-                android:hint="Country"
-                android:textSize="16sp"
-                />
+    </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,37 +7,38 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import com.galgolabs.earthweather.MainActivity
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
-import com.galgolabs.earthweather.ui.ApiModule
-import com.galgolabs.earthweather.ui.WebServiceInterface
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 class HomeFragment : Fragment() {
 
+    private var mIsRefreshing: Boolean = false
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationManager: LocationManager
+
+    private var cityName: String? = null
+    private var cityLat: Float? = 0.0F
+    private var cityLng: Float? = 0.0F
 
     private lateinit var homeViewModel : HomeViewModel
 
@@ -65,8 +66,12 @@ class HomeFragment : Fragment() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location : Location? ->
                 if (location != null) {
-                    homeViewModel.fetchMyLocation(lat= location.latitude, lng= location.longitude)
-                    println("lastLocation : ${location.latitude} - ${location.longitude}")
+                    if (mIsRefreshing){
+                        homeViewModel.fetchMyLocation(lat= cityLat!!.toDouble(), lng= cityLng!!.toDouble())
+                    }else{
+                        homeViewModel.fetchMyLocation(lat= location.latitude, lng= location.longitude)
+                        println("lastLocation : ${location.latitude} - ${location.longitude}")
+                    }
                 }
             }
     }
@@ -81,6 +86,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        mIsRefreshing = arguments?.get("refreshCity") as Boolean
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -90,8 +96,6 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = homeViewModel
-
-
 
         if (ContextCompat.checkSelfPermission(
                 requireActivity().applicationContext, reqPerms[0]) == PackageManager.PERMISSION_GRANTED){
@@ -109,18 +113,34 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
-
-//        val nameObs = Observer<String> {
-//            binding.cityText.text = it
-//        }
-//        homeViewModel.locationName.observe(viewLifecycleOwner, nameObs)
-
-//        return root
         return view
+    }
+
+    private fun getArgs() {
+        cityLng = arguments?.get("myCityLng") as Float?
+        cityLat = arguments?.get("myCityLat") as Float?
+        cityName = arguments?.get("myCityName") as String?
+
+        println("onItemClickedCallback : ${cityName} - LatLng (${cityLat},${cityLng})")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
+        mActionBar?.hide()
+        if (mIsRefreshing){
+            try {
+                getArgs()
+            }catch (ex: java.lang.Exception){
+                ex.printStackTrace()
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
+        mActionBar?.show()
         _binding = null
     }
 }

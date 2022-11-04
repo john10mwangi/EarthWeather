@@ -9,13 +9,51 @@
         android:id="@+id/navigation_home"
         android:name="com.galgolabs.earthweather.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <argument
+            android:name="refreshCity"
+            app:argType="boolean"
+            android:defaultValue="false"
+            app:nullable="false"/>
+        <argument
+            android:name="myCityName"
+            app:argType="string"
+            app:nullable="true"/>
+        <argument
+            android:name="myCityLat"
+            app:argType="float"
+            android:defaultValue="0.0"/>
+        <argument
+            android:name="myCityLng"
+            app:argType="float"
+            android:defaultValue="0.0" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.galgolabs.earthweather.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_navigation_dashboard_to_navigation_home2"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true"
+            app:launchSingleTop="true" >
+            <argument
+                android:name="myCityName"
+                app:argType="string"
+                app:nullable="true"/>
+            <argument
+                android:name="myCityLat"
+                app:argType="float"
+                android:defaultValue="0.0"/>
+            <argument
+                android:name="myCityLng"
+                app:argType="float"
+                android:defaultValue="0.0" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"

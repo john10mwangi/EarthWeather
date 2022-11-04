@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.galgolabs.earthweather.R
 
 import com.galgolabs.earthweather.databinding.FragmentDashboardBinding
 
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), ItemSelectedCallback {
 
     private var _binding: FragmentDashboardBinding? = null
 
@@ -34,7 +34,7 @@ class DashboardFragment : Fragment() {
         dashboardViewModel.addDummy()
 
         val cityObs = Observer<ArrayList<City>>{
-            var adapter = CityAdapter(it)
+            var adapter = CityAdapter(it, this@DashboardFragment)
             binding.adapter = adapter
         }
         dashboardViewModel.cities.observe(viewLifecycleOwner, cityObs)
@@ -45,5 +45,11 @@ class DashboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onSelection(city: City) {
+        val direction = DashboardFragmentDirections.
+        actionNavigationDashboardToNavigationHome2(myCityName = city.name, myCityLat = city.lat.toFloat(), myCityLng = city.lng.toFloat(),refreshCity = true)
+        findNavController().navigate(directions = direction)
     }
 }

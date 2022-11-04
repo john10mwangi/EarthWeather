@@ -6,9 +6,16 @@
 
 
     <string name="degree_celcius">\u2103</string>
-<!--    <string name="degree_celcius">0C</string>-->
+    <!--    <string name="degree_celcius">0C</string>-->
     <string name="wind_title">Winds</string>
     <string name="more">Show More</string>
     <string name="search">Search</string>
     <string name="setting">Settings</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="date_text">Fri, 4 Nov</string>
+    <string name="city_text_placeholder">Nairobi</string>
+    <string name="temp_placeholder">23 C</string>
+    <string name="forecast_placeholder">Cloudy</string>
 </resources>
