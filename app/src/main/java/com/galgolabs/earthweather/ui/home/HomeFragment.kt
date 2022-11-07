@@ -107,11 +107,11 @@ class HomeFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
 
-        val obs = Observer<NetworkResponse> {
-            println("Returned object is : ${it.weatherData.name}")
-            homeViewModel.devolve(it.weatherData)
-        }
-        homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
+//        val obs = Observer<NetworkResponse> {
+//            println("Returned object is : ${it.weatherData.name}")
+//            homeViewModel.devolve(it.weatherData)
+//        }
+//        homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
         return view
     }

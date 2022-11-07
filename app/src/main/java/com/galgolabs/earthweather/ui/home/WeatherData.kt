@@ -1,5 +1,6 @@
 package com.galgolabs.earthweather.ui.home
 
+
 data class WeatherData (val name:String, val id: Int, val cod: Int,
                         val weather: ArrayList<Weather>, val coord: Coords,
                         val main: Main, val wind: Wind, val sys: Sys,

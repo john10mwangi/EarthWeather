@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 //@HiltViewModel
 class HomeViewModel  : ViewModel(), Observable {
-    private var repo: Repository = Repository()
+//    private var repo: Repository = Repository()
     private var compassUtil = CompassUtil()
     private var utilDate = UtilDate()
 
@@ -26,12 +26,12 @@ class HomeViewModel  : ViewModel(), Observable {
     var sunRise: MutableLiveData<String> = MutableLiveData()
     var forecast: MutableLiveData<String> = MutableLiveData()
 
-    var fetchResult: MutableLiveData<NetworkResponse> = repo.result
+//    var fetchResult: MutableLiveData<NetworkResponse> = repo.result
 
     //
     fun fetchMyLocation(lat: Double, lng: Double) {
         viewModelScope.launch {
-            repo.fetchData(lat, lng)
+//            repo.fetchData(lat, lng)
         }
     }
 

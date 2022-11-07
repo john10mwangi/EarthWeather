@@ -2,11 +2,17 @@ package com.galgolabs.earthweather.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import com.galgolabs.earthweather.ui.WebServices
+import com.galgolabs.earthweather.ui.localDB.MiniClimate
+import com.galgolabs.earthweather.ui.localDB.WeatherDAO
+import kotlinx.coroutines.flow.Flow
 
-class Repository(private var webServices: WebServices = WebServices())
+class Repository(private val weatherDAO: WeatherDAO)
     : WebServices.ResultsCallback{
+    private var webServices: WebServices = WebServices()
 
     var result: MutableLiveData<NetworkResponse> = MutableLiveData()
+
+    var allWeather: Flow<List<MiniClimate>> = weatherDAO.fetch()
 
     init {
         webServices.callback = this
@@ -17,5 +23,7 @@ class Repository(private var webServices: WebServices = WebServices())
     override fun onRetrievedSuccess(data: WeatherData) {
         result.value = NetworkResponse(data)
     }
+
+
 
 }
