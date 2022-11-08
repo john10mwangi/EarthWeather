@@ -12,7 +12,7 @@ interface WeatherDAO {
     @Query("SELECT * FROM climate_data")
     fun fetch(): Flow<List<MiniClimate>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun create(weatherData: MiniClimate)
 
     @Query("DELETE FROM climate_data")

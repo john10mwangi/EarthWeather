@@ -23,6 +23,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -32,15 +33,22 @@ import androidx.navigation.ui.setupWithNavController
 import com.galgolabs.earthweather.databinding.ActivityMainBinding
 //import com.galgolabs.earthweather.databinding.ActivityMainBinding
 import com.galgolabs.earthweather.ui.ApiModule
+import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.WebServiceInterface
+import com.galgolabs.earthweather.ui.localDB.MiniClimate
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
+import kotlin.coroutines.coroutineContext
 
 //@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var binding: ActivityMainBinding
+    private val scope = CoroutineScope(newSingleThreadContext("name"))
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +57,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
         setContentView(binding.root)
 
         val viewModel : MainViewModel by viewModels {
-            MainViewModelFactory((application as EarthWeatherApp).repository)
+            MainViewModelFactory((application as EarthWeather).repository)
         }
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -66,6 +74,19 @@ class MainActivity : AppCompatActivity(), LocationListener {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val obserser = Observer<List<MiniClimate>>{
+            print("weather : ${it.get(0)}")
+        }
+        viewModel.allWeather.observe(this, obserser)
+        try {
+            val climate = MiniClimate(3163858, "Zocca",200,10000,1661870592)
+            scope.launch{
+                viewModel.insertData(climate)
+            }
+        }catch (ex: java.lang.Exception){
+            ex.printStackTrace()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

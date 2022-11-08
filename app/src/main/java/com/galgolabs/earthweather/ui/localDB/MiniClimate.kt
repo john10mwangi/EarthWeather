@@ -3,6 +3,8 @@ package com.galgolabs.earthweather.ui.localDB
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import androidx.room.Relation
 import com.galgolabs.earthweather.ui.home.*
@@ -22,27 +24,32 @@ import com.galgolabs.earthweather.ui.home.*
 //                         @ColumnInfo(name = "")val clouds: Cloud)
 
 @Entity(tableName = "climate_data")
-data class MiniClimate ( @PrimaryKey(autoGenerate = true) val climateId: Int,
+data class MiniClimate ( @PrimaryKey(autoGenerate = false) val climateId: Int,
                          @ColumnInfo(name = "name")val name:String,
-                         @ColumnInfo(name = "id")val id: Int,
                          @ColumnInfo(name = "cod")val cod: Int,
                          @ColumnInfo(name = "visibility")val visibility: Int,
                          @ColumnInfo(name = "dt")val dt: Long)
 
-@Entity(tableName = "weather_data")
+@Entity(tableName = "weather_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniWeather ( @PrimaryKey(autoGenerate = true) val weatherId: Int,
+                         @ColumnInfo(name = "parentId")val parentId: Int,
                          @ColumnInfo(name = "id")val id: Int,
                          @ColumnInfo(name = "main")val main: String,
                          @ColumnInfo(name = "description")val description: String)
 
-@Entity(tableName = "coords_data")
+@Entity(tableName = "coords_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniCoords ( @PrimaryKey(autoGenerate = true) val coordId: Int,
+                        @ColumnInfo(name = "parentId")val parentId: Int,
                         @ColumnInfo(name = "lat")val lat: Double,
                         @ColumnInfo(name = "lon")val lon: Double)
 
-@Entity(tableName = "main_data")
+@Entity(tableName = "main_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniMain ( @PrimaryKey(autoGenerate = true) val mainId: Int,
                       @ColumnInfo(name = "temp")val temp: Float,
+                      @ColumnInfo(name = "parentId")val parentId: Int,
                       @ColumnInfo(name = "feels_like")val feels_like: Float,
                       @ColumnInfo(name = "temp_min")val temp_min: Float,
                       @ColumnInfo(name = "temp_max")val temp_max: Float,
@@ -53,22 +60,27 @@ data class MiniMain ( @PrimaryKey(autoGenerate = true) val mainId: Int,
                       @ColumnInfo(name = "timezone")val timezone: Int,
                       @ColumnInfo(name = "icon")val icon: String )
 
-@Entity(tableName = "wind_data")
+@Entity(tableName = "wind_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniWind ( @PrimaryKey(autoGenerate = true) val windId: Int,
                       @ColumnInfo(name = "speed")val speed: Float,
+                      @ColumnInfo(name = "parentId")val parentId: Int,
                       @ColumnInfo(name = "deg")val deg: Int,
                       @ColumnInfo(name = "gust")val gust: Float)
 
-@Entity(tableName = "sys_data")
+@Entity(tableName = "sys_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniSys ( @PrimaryKey(autoGenerate = true) val sysId: Int,
+                     @ColumnInfo(name = "parentId")val parentId: Int,
                      @ColumnInfo(name = "country")val country: String,
                      @ColumnInfo(name = "sunrise")val sunrise: Long,
                      @ColumnInfo(name = "sunset")val sunset: Long)
 
-@Entity(tableName = "cloud_data")
+@Entity(tableName = "cloud_data", foreignKeys = [ForeignKey(entity = MiniClimate::class, onDelete = CASCADE,
+    parentColumns = ["climateId"], childColumns = ["parentId"])])
 data class MiniCloud ( @PrimaryKey(autoGenerate = true) val cloudId: Int,
+                       @ColumnInfo(name = "parentId")val parentId: Int,
                        @ColumnInfo(name = "all")val all: Int)
-
 
 
 data class MiniWeatherData (

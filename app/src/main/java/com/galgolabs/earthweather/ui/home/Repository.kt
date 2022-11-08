@@ -24,6 +24,8 @@ class Repository(private val weatherDAO: WeatherDAO)
         result.value = NetworkResponse(data)
     }
 
-
+    suspend fun insert(climate: MiniClimate){
+        weatherDAO.create(climate)
+    }
 
 }
