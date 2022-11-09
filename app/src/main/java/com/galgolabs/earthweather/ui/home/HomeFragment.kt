@@ -17,11 +17,13 @@ import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.galgolabs.earthweather.MainActivity
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
+import com.galgolabs.earthweather.ui.EarthWeather
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
@@ -87,8 +89,12 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         mIsRefreshing = arguments?.get("refreshCity") as Boolean
-        homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+//        homeViewModel =
+//            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val viewModel : HomeViewModel by viewModels {
+            HomeViewModelFactory(((requireActivity().applicationContext) as EarthWeather).repository)
+        }
+        this.homeViewModel = viewModel
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 //        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         _binding = DataBindingUtil.bind(view)
@@ -107,11 +113,11 @@ class HomeFragment : Fragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION))
         }
 
-//        val obs = Observer<NetworkResponse> {
-//            println("Returned object is : ${it.weatherData.name}")
-//            homeViewModel.devolve(it.weatherData)
-//        }
-//        homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
+        val obs = Observer<NetworkResponse> {
+            println("Returned object is : ${it.weatherData.name}")
+            homeViewModel.devolve(it.weatherData)
+        }
+        homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
         return view
     }

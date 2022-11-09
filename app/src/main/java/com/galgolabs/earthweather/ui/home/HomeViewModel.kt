@@ -4,16 +4,18 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.galgolabs.earthweather.MainViewModel
 import com.galgolabs.earthweather.ui.CompassUtil
 import com.galgolabs.earthweather.ui.UtilDate
+import com.galgolabs.earthweather.ui.localDB.MiniClimate
+import com.galgolabs.earthweather.ui.localDB.MiniMain
+import com.galgolabs.earthweather.ui.localDB.MiniWeather
+import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import kotlinx.coroutines.launch
 
 //@HiltViewModel
-class HomeViewModel  : ViewModel(), Observable {
-//    private var repo: Repository = Repository()
+class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     private var compassUtil = CompassUtil()
     private var utilDate = UtilDate()
 
@@ -26,12 +28,18 @@ class HomeViewModel  : ViewModel(), Observable {
     var sunRise: MutableLiveData<String> = MutableLiveData()
     var forecast: MutableLiveData<String> = MutableLiveData()
 
-//    var fetchResult: MutableLiveData<NetworkResponse> = repo.result
+    suspend fun insertData(climate: WeatherData){
+        repo.insert(climate)
+    }
+
+    val allWeather: LiveData<List<MiniClimate>> = repo.allWeather.asLiveData()
+
+    var fetchResult: MutableLiveData<NetworkResponse> = repo.result
 
     //
     fun fetchMyLocation(lat: Double, lng: Double) {
         viewModelScope.launch {
-//            repo.fetchData(lat, lng)
+            repo.fetchData(lat, lng)
         }
     }
 
@@ -57,11 +65,30 @@ class HomeViewModel  : ViewModel(), Observable {
         windSpeed.value = speed
 
         print("devolve : $locationName")
+
+        try {
+//            val climate = MiniClimate(3163858, "Zocca",200,10000,1661870592)
+            viewModelScope.launch{
+                insertData(weatherData)
+            }
+        }catch (ex: java.lang.Exception){
+            ex.printStackTrace()
+        }
     }
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
     }
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class HomeViewModelFactory(private val repository: Repository): ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)){
+            return HomeViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel Class")
     }
 }

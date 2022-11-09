@@ -8,12 +8,10 @@ import com.galgolabs.earthweather.ui.home.Repository
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
 
 class MainViewModel(private val repository: Repository): ViewModel() {
-
-
-    suspend fun insertData(climate: MiniClimate){
-        repository.insert(climate)
-    }
-
+//    suspend fun insertData(climate: MiniClimate){
+//        repository.insert(climate)
+//    }
+//
     val allWeather: LiveData<List<MiniClimate>> = repository.allWeather.asLiveData()
 }
 

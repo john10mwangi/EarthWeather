@@ -56,9 +56,9 @@ class MainActivity : AppCompatActivity(), LocationListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
 
-        val viewModel : MainViewModel by viewModels {
-            MainViewModelFactory((application as EarthWeather).repository)
-        }
+//        val viewModel : MainViewModel by viewModels {
+//            MainViewModelFactory((application as EarthWeather).repository)
+//        }
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         setSupportActionBar(binding.myToolbar)
@@ -75,18 +75,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        val obserser = Observer<List<MiniClimate>>{
-            print("weather : ${it.get(0)}")
-        }
-        viewModel.allWeather.observe(this, obserser)
-        try {
-            val climate = MiniClimate(3163858, "Zocca",200,10000,1661870592)
-            scope.launch{
-                viewModel.insertData(climate)
-            }
-        }catch (ex: java.lang.Exception){
-            ex.printStackTrace()
-        }
+//        val obserser = Observer<List<MiniClimate>>{
+//            print("weather : ${it.get(0)}")
+//        }
+//        viewModel.allWeather.observe(this, obserser)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
