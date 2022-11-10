@@ -12,7 +12,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
 //        repository.insert(climate)
 //    }
 //
-    val allWeather: LiveData<List<MiniClimate>> = repository.allWeather.asLiveData()
+//    val allWeather: LiveData<List<MiniClimate>> = repository.allWeather.asLiveData()
 }
 
 @Suppress("UNCHECKED_CAST")

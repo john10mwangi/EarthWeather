@@ -2,6 +2,8 @@ package com.galgolabs.earthweather.ui.home
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -19,13 +21,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.galgolabs.earthweather.MainActivity
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
 import com.galgolabs.earthweather.ui.EarthWeather
+import com.galgolabs.earthweather.ui.localDB.MiniClimate
+import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
 
@@ -37,6 +42,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationManager: LocationManager
+    private lateinit var preferences: SharedPreferences
 
     private var cityName: String? = null
     private var cityLat: Float? = 0.0F
@@ -69,9 +75,17 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { location : Location? ->
                 if (location != null) {
                     if (mIsRefreshing){
-                        homeViewModel.fetchMyLocation(lat= cityLat!!.toDouble(), lng= cityLng!!.toDouble())
+                        homeViewModel.fetchMyLocation(
+                            lat= cityLat!!.toDouble(),
+                            lng= cityLng!!.toDouble(),
+                            preferences = preferences,
+                            isFromTown = true)
                     }else{
-                        homeViewModel.fetchMyLocation(lat= location.latitude, lng= location.longitude)
+                        homeViewModel.fetchMyLocation(
+                            lat= location.latitude,
+                            lng= location.longitude,
+                            preferences = preferences
+                        )
                         println("lastLocation : ${location.latitude} - ${location.longitude}")
                     }
                 }
@@ -98,6 +112,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 //        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         _binding = DataBindingUtil.bind(view)
+        preferences = requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
 //        val root: View = binding.root
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -118,6 +133,14 @@ class HomeFragment : Fragment() {
             homeViewModel.devolve(it.weatherData)
         }
         homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
+
+        val observerAll = Observer<List<MiniWeatherData>> {
+            println("weatherdb : ${it.size}")
+            if (it.size != 0){
+                homeViewModel.populate(it[0])
+            }
+        }
+        homeViewModel.allWeather.observe(viewLifecycleOwner, observerAll)
 
         return view
     }

@@ -1,23 +1,24 @@
 package com.galgolabs.earthweather.ui.home
 
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.lifecycle.*
-import com.galgolabs.earthweather.MainViewModel
 import com.galgolabs.earthweather.ui.CompassUtil
 import com.galgolabs.earthweather.ui.UtilDate
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
-import com.galgolabs.earthweather.ui.localDB.MiniMain
 import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import kotlinx.coroutines.launch
+import java.util.Date
 
 //@HiltViewModel
 class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     private var compassUtil = CompassUtil()
     private var utilDate = UtilDate()
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     var locationName: MutableLiveData<String> = MutableLiveData()
     var averageTemp: MutableLiveData<String> = MutableLiveData()
@@ -32,20 +33,55 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
         repo.insert(climate)
     }
 
-    val allWeather: LiveData<List<MiniClimate>> = repo.allWeather.asLiveData()
+    val weather : LiveData<List<MiniClimate>> = repo.weather.asLiveData()
+
+    val allWeather: LiveData<List<MiniWeatherData>> = repo.allWeather.asLiveData()
 
     var fetchResult: MutableLiveData<NetworkResponse> = repo.result
 
     //
-    fun fetchMyLocation(lat: Double, lng: Double) {
-        viewModelScope.launch {
-            repo.fetchData(lat, lng)
+    fun fetchMyLocation(lat: Double, lng: Double, preferences: SharedPreferences, isFromTown: Boolean = false) {
+        sharedPreferences = preferences
+        val lastUpdate = preferences.getLong("lastUpdate", 0)
+        println("lastupdate : $lastUpdate")
+        val now = System.currentTimeMillis()
+        val minEllapsedMillisecs = 1000*60*60
+        if (isFromTown){
+            viewModelScope.launch {
+                repo.fetchData(lat, lng)
+            }
+        }else if (lastUpdate > 0 ) {
+            val date = Date(lastUpdate)
+            if (now.minus(date.time) >= minEllapsedMillisecs){
+                viewModelScope.launch {
+                    repo.fetchData(lat, lng)
+                }
+            }
+        }else {
+            viewModelScope.launch {
+                repo.fetchData(lat, lng)
+            }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun devolve(weatherData: WeatherData) {
-        locationName.value = weatherData.name
+        try {
+            val now = System.currentTimeMillis()
+            viewModelScope.launch{
+                insertData(weatherData)
+                sharedPreferences.edit().putLong("lastUpdate", now).apply()
+            }
+        }catch (ex: java.lang.Exception){
+            ex.printStackTrace()
+        }
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun populate(weatherData: MiniWeatherData) {
+        locationName.value = weatherData.climate.name
         averageTemp.value = weatherData.main.temp.toString()
         rangeTemp.value = weatherData.main.temp_max.toString()+
                 " - "+weatherData.main.temp_min.toString()
@@ -63,17 +99,6 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
 
         val speed = weatherData.wind.speed.toString()+" m/s"
         windSpeed.value = speed
-
-        print("devolve : $locationName")
-
-        try {
-//            val climate = MiniClimate(3163858, "Zocca",200,10000,1661870592)
-            viewModelScope.launch{
-                insertData(weatherData)
-            }
-        }catch (ex: java.lang.Exception){
-            ex.printStackTrace()
-        }
     }
 
     override fun addOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {

@@ -4,9 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import androidx.room.ForeignKey.CASCADE
+import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
 import androidx.room.Relation
+import java.util.Date
 
 //@Entity(tableName = "climate_data")
 //data class MiniClimate ( @PrimaryKey(autoGenerate = true)
@@ -80,36 +81,41 @@ data class MiniCloud(@PrimaryKey(autoGenerate = true) val cloudId: Int = 0,
                      @ColumnInfo(name = "parentId") val parentId: Long,
                      @ColumnInfo(name = "all") val all: Int)
 
-
 data class MiniWeatherData (
     @Embedded val climate: MiniClimate,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "main"
+        entityColumn = "parentId",
+        entity = MiniWeather::class
     )
-    val weather: ArrayList<MiniWeather>,
+    val weather: List<MiniWeather>,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "lat"
+        entityColumn = "parentId",
+        entity = MiniCoords::class
     )
     val coord: MiniCoords,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "temp"
+        entityColumn = "parentId",
+        entity = MiniMain::class
     )
     val main: MiniMain,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "speed"
+        entityColumn = "parentId",
+        entity = MiniWind::class
     )
     val wind: MiniWind,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "country"
+        entityColumn = "parentId",
+        entity = MiniSys::class
     )
     val sys: MiniSys,
     @Relation(
         parentColumn = "climateId",
-        entityColumn = "all"
+        entityColumn = "parentId",
+        entity = MiniCloud::class
     )
     val clouds: MiniCloud)

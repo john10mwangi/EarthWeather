@@ -7,11 +7,17 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.galgolabs.earthweather.ui.home.WeatherData
 import kotlinx.coroutines.flow.Flow
+import java.util.*
+import kotlin.collections.ArrayList
 
 @Dao
 interface WeatherDAO {
     @Query("SELECT * FROM climate_data")
     fun fetch(): Flow<List<MiniClimate>>
+
+    @Transaction
+    @Query("SELECT * FROM climate_data")
+    fun fetchWeather(): Flow<List<MiniWeatherData>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun create(weatherData: MiniClimate) : Long

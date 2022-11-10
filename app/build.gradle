@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'com.galgolabs.earthweather'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.galgolabs.earthweather"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -77,9 +77,9 @@ dependencies {
     // Feature module Support
     implementation "androidx.navigation:navigation-dynamic-features-fragment:2.5.3"
 
-    kapt "androidx.room:room-compiler:2.4.3"
+    kapt "androidx.room:room-compiler:2.5.0-beta02"
     // To use Kotlin Symbol Processing (KSP)
 //    annotationProcessor "androidx.room:room-compiler:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
+    implementation "androidx.room:room-ktx:2.5.0-beta02"
 
 }

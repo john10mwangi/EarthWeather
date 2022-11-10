@@ -18,4 +18,6 @@
     <string name="city_text_placeholder">Nairobi</string>
     <string name="temp_placeholder">23 C</string>
     <string name="forecast_placeholder">Cloudy</string>
+
+    <string name="last_update">lastUpdate</string>
 </resources>
