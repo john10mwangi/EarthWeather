@@ -43,10 +43,10 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     fun fetchMyLocation(lat: Double, lng: Double, preferences: SharedPreferences, isFromTown: Boolean = false) {
         sharedPreferences = preferences
         val lastUpdate = preferences.getLong("lastUpdate", 0)
-        println("lastupdate : $lastUpdate")
         val now = System.currentTimeMillis()
         val minEllapsedMillisecs = 1000*60*60
         if (isFromTown){
+            println("lastupdate : $lastUpdate")
             viewModelScope.launch {
                 repo.fetchData(lat, lng)
             }

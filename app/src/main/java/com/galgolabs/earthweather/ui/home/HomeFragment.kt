@@ -75,6 +75,7 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { location : Location? ->
                 if (location != null) {
                     if (mIsRefreshing){
+                        print("MissingPermission ; $location.latitude")
                         homeViewModel.fetchMyLocation(
                             lat= cityLat!!.toDouble(),
                             lng= cityLng!!.toDouble(),
@@ -102,7 +103,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mIsRefreshing = arguments?.get("refreshCity") as Boolean
+        mIsRefreshing = arguments?.getBoolean("refreshCity") as Boolean
 //        homeViewModel =
 //            ViewModelProvider(this).get(HomeViewModel::class.java)
         val viewModel : HomeViewModel by viewModels {
@@ -120,7 +121,7 @@ class HomeFragment : Fragment() {
 
         if (ContextCompat.checkSelfPermission(
                 requireActivity().applicationContext, reqPerms[0]) == PackageManager.PERMISSION_GRANTED){
-            Toast.makeText(requireActivity(), "granted", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(requireActivity(), "granted", Toast.LENGTH_SHORT).show()
             lastLoc()
         }else {
             locationPermissionRequest.launch(arrayOf(
@@ -155,6 +156,7 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        mIsRefreshing = arguments?.getBoolean("refreshCity") as Boolean
         val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
         mActionBar?.hide()
         if (mIsRefreshing){
