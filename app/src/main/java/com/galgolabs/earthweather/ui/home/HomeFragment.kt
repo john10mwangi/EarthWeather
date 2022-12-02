@@ -27,6 +27,7 @@ import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
 import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
+import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -136,20 +137,33 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
         val observerAll = Observer<List<MiniWeatherData>> {
-            println("weatherdb : ${it.size}")
+//            println("weatherdb : ${it.size}")
             if (it.size != 0){
                 homeViewModel.populate(it[0])
             }
         }
         homeViewModel.allWeather.observe(viewLifecycleOwner, observerAll)
 
+
+        val observeInsert = Observer<Long> {
+            println("observeInsert : ${it}")
+            homeViewModel.fetchById(it)
+        }
+        homeViewModel.refreshNeeded.observe(viewLifecycleOwner, observeInsert)
+
+        val obsWeather = Observer<MiniWeatherData> {
+            println("obsWeather : ${it}")
+//            homeViewModel.fetchById(it)
+        }
+        homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
+
         return view
     }
 
     private fun getArgs() {
-        cityLng = arguments?.get("myCityLng") as Float?
-        cityLat = arguments?.get("myCityLat") as Float?
-        cityName = arguments?.get("myCityName") as String?
+        cityLng = arguments?.getFloat("myCityLng")
+        cityLat = arguments?.getFloat("myCityLat")
+        cityName = arguments?.getString("myCityName")
 
         println("onItemClickedCallback : ${cityName} - LatLng (${cityLat},${cityLng})")
     }

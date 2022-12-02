@@ -15,6 +15,9 @@ interface WeatherDAO {
     @Query("SELECT * FROM climate_data")
     fun fetch(): Flow<List<MiniClimate>>
 
+    @Query("SELECT * FROM climate_data WHERE climateId = :id")
+    fun fetch(id: Long): MiniWeatherData
+
     @Transaction
     @Query("SELECT * FROM climate_data")
     fun fetchWeather(): Flow<List<MiniWeatherData>>
@@ -32,7 +35,7 @@ interface WeatherDAO {
     suspend fun create(coords: MiniCoords)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun create(wind: MiniWind)
+    suspend fun create(wind: MiniWind): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun create(sys: MiniSys)
@@ -44,7 +47,7 @@ interface WeatherDAO {
     suspend fun deleteAll()
 
     @Transaction
-    suspend fun createWeatherData(climate: WeatherData){
+    suspend fun createWeatherData(climate: WeatherData) : Long{
         val climateId = create(MiniClimate(climate.id, climate.name, climate.cod, climate.visibility, climate.dt))
         val weathers = ArrayList<MiniWeather>()
         for (miniWeather in climate.weather){
@@ -66,7 +69,9 @@ interface WeatherDAO {
 
         create(MiniCloud(parentId = climateId, all = climate.clouds.all))
 
-        create(MiniWind(parentId = climateId, speed = climate.wind.speed, deg = climate.wind.deg, gust = climate.wind.gust))
+        val ret = create(MiniWind(parentId = climateId, speed = climate.wind.speed, deg = climate.wind.deg, gust = climate.wind.gust))
+
+        return ret
     }
 
 

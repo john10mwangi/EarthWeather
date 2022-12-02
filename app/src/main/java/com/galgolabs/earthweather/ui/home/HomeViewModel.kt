@@ -29,11 +29,13 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     var sunRise: MutableLiveData<String> = MutableLiveData()
     var forecast: MutableLiveData<String> = MutableLiveData()
 
+    var refreshNeeded : MutableLiveData<Long> = repo.res
+
     suspend fun insertData(climate: WeatherData){
         repo.insert(climate)
     }
 
-    val weather : LiveData<List<MiniClimate>> = repo.weather.asLiveData()
+    val weather : MutableLiveData<MiniWeatherData> = repo.weatherRefreshed
 
     val allWeather: LiveData<List<MiniWeatherData>> = repo.allWeather.asLiveData()
 
@@ -61,6 +63,12 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
             viewModelScope.launch {
                 repo.fetchData(lat, lng)
             }
+        }
+    }
+
+    fun fetchById(id: Long) {
+        viewModelScope.launch {
+            repo.fetchData(id)
         }
     }
 
