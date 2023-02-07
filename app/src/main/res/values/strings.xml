@@ -14,10 +14,10 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>
-    <string name="date_text">Fri, 4 Nov</string>
-    <string name="city_text_placeholder">Nairobi</string>
-    <string name="temp_placeholder">23 C</string>
-    <string name="forecast_placeholder">Cloudy</string>
+    <string name="date_text">Fri, 4 Feb</string>
+    <string name="city_text_placeholder">N.Y.C.</string>
+    <string name="temp_placeholder">25 C</string>
+    <string name="forecast_placeholder">Clear Sky</string>
 
     <string name="last_update">lastUpdate</string>
 </resources>

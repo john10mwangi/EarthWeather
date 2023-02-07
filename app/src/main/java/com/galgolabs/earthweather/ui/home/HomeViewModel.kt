@@ -1,11 +1,13 @@
 package com.galgolabs.earthweather.ui.home
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.lifecycle.*
 import com.galgolabs.earthweather.ui.CompassUtil
+import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.UtilDate
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
 import com.galgolabs.earthweather.ui.localDB.MiniWeather

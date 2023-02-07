@@ -31,6 +31,7 @@ import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -76,23 +77,23 @@ class HomeFragment : Fragment() {
             .addOnSuccessListener { location : Location? ->
                 if (location != null) {
                     if (mIsRefreshing){
-                        print("MissingPermission ; $location.latitude")
-                        homeViewModel.fetchMyLocation(
-                            lat= cityLat!!.toDouble(),
-                            lng= cityLng!!.toDouble(),
-                            preferences = preferences,
+                        fetch(cityLat!!.toDouble(),
+                            cityLng!!.toDouble(),
                             isFromTown = true)
                     }else{
-                        homeViewModel.fetchMyLocation(
-                            lat= location.latitude,
-                            lng= location.longitude,
-                            preferences = preferences
-                        )
-                        println("lastLocation : ${location.latitude} - ${location.longitude}")
+                        fetch(location.latitude, location.longitude)
                     }
                 }
             }
     }
+
+    fun fetch(latitude: Double, longitude: Double, isFromTown: Boolean = false){
+        homeViewModel.fetchMyLocation(
+            lat= latitude,
+            lng= longitude,
+            preferences = preferences,
+            isFromTown = isFromTown
+        )}
 
     val reqPerms = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -140,6 +141,9 @@ class HomeFragment : Fragment() {
 //            println("weatherdb : ${it.size}")
             if (it.size != 0){
                 homeViewModel.populate(it[0])
+                val gson = Gson()
+                val weatherGson = gson.toJson(it[0])
+                preferences.edit().putString("pref_weather", weatherGson).apply()
             }
         }
         homeViewModel.allWeather.observe(viewLifecycleOwner, observerAll)
@@ -174,8 +178,13 @@ class HomeFragment : Fragment() {
         val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
         mActionBar?.hide()
         if (mIsRefreshing){
+
+            println("mIsRefreshing : ${mIsRefreshing}")
             try {
                 getArgs()
+                fetch(cityLat!!.toDouble(),
+                    cityLng!!.toDouble(),
+                    isFromTown = true)
             }catch (ex: java.lang.Exception){
                 ex.printStackTrace()
             }
