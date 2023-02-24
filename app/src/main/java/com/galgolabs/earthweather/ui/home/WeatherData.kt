@@ -55,3 +55,14 @@ data class Sys (
 
 @Entity(tableName = "cloud_data")
 data class Cloud (val all: Int)
+
+data class TownData (
+    val place_id: String,
+    val cod: Int,
+    val boundingbox: ArrayList<String>,
+    val lat: String,
+    val lon: String,
+    val display_name: String,
+    val type: String,
+    val importance: Double,
+    val icon: String)

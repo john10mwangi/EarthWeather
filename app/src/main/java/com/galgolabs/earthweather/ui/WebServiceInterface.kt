@@ -1,5 +1,6 @@
 package com.galgolabs.earthweather.ui
 
+import com.galgolabs.earthweather.ui.home.TownData
 import com.galgolabs.earthweather.ui.home.WeatherData
 import retrofit2.Response
 import retrofit2.http.GET
@@ -18,5 +19,9 @@ class WebServiceInterface {
                 @Query("units") unit: String, @Query("lang") ln: String,
                 @Query("mode") form: String, @Query("lat") lat: Double,
                 @Query("lon") lng: Double): Response<WeatherData>
+
+        @GET("{path}")
+        suspend fun getTown(@Path("path") path: String, @Query("key") key: String, @Query("q") q: String, @Query("format") format: String): Response<TownData>
+
     }
 }

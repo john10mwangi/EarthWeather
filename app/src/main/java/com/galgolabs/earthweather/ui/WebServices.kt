@@ -3,6 +3,7 @@ package com.galgolabs.earthweather.ui
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import com.galgolabs.earthweather.ui.home.TownData
 import com.galgolabs.earthweather.ui.home.WeatherData
 
 class WebServices {
@@ -30,7 +31,25 @@ class WebServices {
                 response.body()?.let { callback.onRetrievedSuccess(data= it) }
                 println(response.body().toString())
             }else {
-                println("Faailed")
+                println("Failed")
+            }
+        }catch (Ex: java.lang.Exception){
+            Ex.localizedMessage?.let { Log.e("Error", it) }
+        }
+    }
+
+    suspend fun fetchTown(value: String) {
+        val retrofit = ApiModule2.instance()
+        val api = retrofit.create(WebServiceInterface.WebServiceInterface::class.java)
+        println("fetchTown")
+        try {
+            val  response = api.getTown(path = "search?",key = "pk.65543f2ae9fb6a50584ac5d4e0eed386", q = value, format = returnMode)
+
+            if (response.isSuccessful){
+                response.body()?.let { callback.onRetrievedSuccess(data= it) }
+                println(response.body().toString())
+            }else {
+                println("Failed")
             }
         }catch (Ex: java.lang.Exception){
             Ex.localizedMessage?.let { Log.e("Error", it) }
@@ -39,5 +58,6 @@ class WebServices {
 
     interface ResultsCallback {
         fun onRetrievedSuccess(data : WeatherData)
+        fun onRetrievedSuccess(data : TownData)
     }
 }

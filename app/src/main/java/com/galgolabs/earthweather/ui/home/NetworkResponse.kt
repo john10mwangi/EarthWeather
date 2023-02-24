@@ -11,3 +11,5 @@ class NetworkResponse(data: WeatherData) {
 //        this.error = error
 //    }
 }
+
+class NetworkResponse2(private val data: TownData)

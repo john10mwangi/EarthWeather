@@ -22,10 +22,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.work.*
 import com.galgolabs.earthweather.MainActivity
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
 import com.galgolabs.earthweather.ui.EarthWeather
+import com.galgolabs.earthweather.ui.WeatherWorkScheduler
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
 import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
@@ -33,12 +35,12 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
 
     private var mIsRefreshing: Boolean = false
     private var _binding: FragmentHomeBinding? = null
-
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -93,7 +95,20 @@ class HomeFragment : Fragment() {
             lng= longitude,
             preferences = preferences,
             isFromTown = isFromTown
-        )}
+        )
+        val data = workDataOf("weather_lat" to latitude, "weather_lon" to longitude)
+        val contraint = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+//        val workRequest = OneTimeWorkRequest.Builder(WeatherWorkScheduler::class.java).build()
+        val workRequest = PeriodicWorkRequest.Builder(WeatherWorkScheduler::class.java,
+            15, TimeUnit.MINUTES, 0, TimeUnit.MINUTES)
+            .setConstraints(contraint)
+            .setInputData(data)
+            .setBackoffCriteria(BackoffPolicy.LINEAR, 10, TimeUnit.SECONDS)
+            .build()
+        val workManager = WorkManager.getInstance(requireActivity().applicationContext)
+        workManager.enqueueUniquePeriodicWork("weather_work",
+            ExistingPeriodicWorkPolicy.KEEP, workRequest)
+    }
 
     val reqPerms = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -111,6 +126,7 @@ class HomeFragment : Fragment() {
         val viewModel : HomeViewModel by viewModels {
             HomeViewModelFactory(((requireActivity().applicationContext) as EarthWeather).repository)
         }
+
         this.homeViewModel = viewModel
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 //        _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -138,7 +154,6 @@ class HomeFragment : Fragment() {
         homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
         val observerAll = Observer<List<MiniWeatherData>> {
-//            println("weatherdb : ${it.size}")
             if (it.size != 0){
                 homeViewModel.populate(it[0])
                 val gson = Gson()
@@ -160,7 +175,6 @@ class HomeFragment : Fragment() {
 //            homeViewModel.fetchById(it)
         }
         homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
-
         return view
     }
 

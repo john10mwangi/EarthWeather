@@ -15,6 +15,7 @@ class Repository(private val weatherDAO: WeatherDAO)
     private var webServices: WebServices = WebServices()
 
     var result: MutableLiveData<NetworkResponse> = MutableLiveData()
+    var result2: MutableLiveData<NetworkResponse2> = MutableLiveData()
 
     var res: MutableLiveData<Long> = MutableLiveData()
 
@@ -38,8 +39,16 @@ class Repository(private val weatherDAO: WeatherDAO)
         result.value = NetworkResponse(data)
     }
 
+    override fun onRetrievedSuccess(data: TownData) {
+        result2.value = NetworkResponse2(data)
+    }
+
     suspend fun insert(climate: WeatherData){
         res.value = weatherDAO.createWeatherData(climate)
+    }
+
+    suspend fun getTown(value: String) {
+        webServices.fetchTown(value)
     }
 
 }

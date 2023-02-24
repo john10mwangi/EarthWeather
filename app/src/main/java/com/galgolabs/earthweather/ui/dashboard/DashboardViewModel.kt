@@ -3,8 +3,11 @@ package com.galgolabs.earthweather.ui.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.galgolabs.earthweather.ui.home.Repository
+import kotlinx.coroutines.launch
 
-class DashboardViewModel : ViewModel() {
+class DashboardViewModel(private var repository: Repository) : ViewModel() {
 
     val cities = MutableLiveData<ArrayList<City>>()
     private val _text = MutableLiveData<String>().apply {
@@ -43,5 +46,11 @@ class DashboardViewModel : ViewModel() {
         arr.add(c9)
 
         cities.value = arr
+    }
+
+    suspend fun fetchTown(value: String) {
+        viewModelScope.launch {
+            repository.getTown(value)
+        }
     }
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import com.galgolabs.earthweather.ui.CompassUtil
 import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.UtilDate
+import com.galgolabs.earthweather.ui.dashboard.DashboardViewModel
 import com.galgolabs.earthweather.ui.localDB.MiniClimate
 import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
@@ -123,6 +124,8 @@ class HomeViewModelFactory(private val repository: Repository): ViewModelProvide
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HomeViewModel::class.java)){
             return HomeViewModel(repository) as T
+        }else if (modelClass.isAssignableFrom(DashboardViewModel::class.java)){
+            return DashboardViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel Class")
     }

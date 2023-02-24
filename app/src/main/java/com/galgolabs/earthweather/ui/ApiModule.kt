@@ -34,3 +34,25 @@ object ApiModule {
         return retrofit
     }
 }
+
+object ApiModule2 {
+    private const val BASE_URL = "https://us1.locationiq.com/v1/"
+
+    fun instance() : Retrofit {
+        val mHttpLoggingInterceptor = HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        val mOkHttpClient = OkHttpClient
+            .Builder()
+            .addInterceptor(mHttpLoggingInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(mOkHttpClient)
+            .build()
+
+        return retrofit
+    }
+}
