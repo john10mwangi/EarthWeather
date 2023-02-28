@@ -56,6 +56,7 @@ data class Sys (
 @Entity(tableName = "cloud_data")
 data class Cloud (val all: Int)
 
+
 data class TownData (
     val place_id: String,
     val cod: Int,

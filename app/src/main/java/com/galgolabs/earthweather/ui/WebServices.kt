@@ -43,11 +43,11 @@ class WebServices {
         val api = retrofit.create(WebServiceInterface.WebServiceInterface::class.java)
         println("fetchTown")
         try {
-            val  response = api.getTown(path = "search?",key = "pk.65543f2ae9fb6a50584ac5d4e0eed386", q = value, format = returnMode)
+            val  response = api.getTown(path = "search",key = "pk.65543f2ae9fb6a50584ac5d4e0eed386", q = value, format = returnMode)
 
             if (response.isSuccessful){
                 response.body()?.let { callback.onRetrievedSuccess(data= it) }
-                println(response.body().toString())
+                println("Places are : ${response.body().toString()}")
             }else {
                 println("Failed")
             }
@@ -58,6 +58,7 @@ class WebServices {
 
     interface ResultsCallback {
         fun onRetrievedSuccess(data : WeatherData)
-        fun onRetrievedSuccess(data : TownData)
+        fun onRetrievedSuccess(data : ArrayList<TownData>)
+//        fun onRetrievedSuccess(data: TownData)
     }
 }

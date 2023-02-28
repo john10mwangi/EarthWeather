@@ -49,6 +49,7 @@ class DashboardFragment : Fragment(), ItemSelectedCallback, SearchView.OnQueryTe
         val cityObs = Observer<ArrayList<City>>{
             var adapter = CityAdapter(it, this@DashboardFragment)
             binding.adapter = adapter
+//            binding.placesAdapter = adapter
         }
         dashboardViewModel.cities.observe(viewLifecycleOwner, cityObs)
 
@@ -67,6 +68,11 @@ class DashboardFragment : Fragment(), ItemSelectedCallback, SearchView.OnQueryTe
             }
 
         }, viewLifecycleOwner)
+
+        binding.addTown.setOnClickListener {
+            val direction = DashboardFragmentDirections.actionNavigationDashboardToPlacesFragment()
+            findNavController().navigate(direction)
+        }
 
         return root
     }

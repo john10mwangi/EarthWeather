@@ -39,7 +39,7 @@ class Repository(private val weatherDAO: WeatherDAO)
         result.value = NetworkResponse(data)
     }
 
-    override fun onRetrievedSuccess(data: TownData) {
+    override fun onRetrievedSuccess(data: ArrayList<TownData>) {
         result2.value = NetworkResponse2(data)
     }
 

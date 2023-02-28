@@ -12,4 +12,4 @@ class NetworkResponse(data: WeatherData) {
 //    }
 }
 
-class NetworkResponse2(private val data: TownData)
+class NetworkResponse2(private val data: ArrayList<TownData>)

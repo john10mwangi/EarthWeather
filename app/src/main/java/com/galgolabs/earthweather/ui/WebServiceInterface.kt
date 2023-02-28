@@ -21,7 +21,7 @@ class WebServiceInterface {
                 @Query("lon") lng: Double): Response<WeatherData>
 
         @GET("{path}")
-        suspend fun getTown(@Path("path") path: String, @Query("key") key: String, @Query("q") q: String, @Query("format") format: String): Response<TownData>
+        suspend fun getTown(@Path("path") path: String, @Query("key") key: String, @Query("q") q: String, @Query("format") format: String): Response<ArrayList<TownData>>
 
     }
 }
