@@ -30,9 +30,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_city"
         android:name="com.galgolabs.earthweather.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/title_city"
         tools:layout="@layout/fragment_dashboard" >
         <action
             android:id="@+id/action_navigation_dashboard_to_navigation_home2"
@@ -60,10 +60,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_settings"
         android:name="com.galgolabs.earthweather.ui.notifications.SettingsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_settings" />
+        android:label="@string/title_settings"
+        />
     <fragment
         android:id="@+id/placesFragment"
         android:name="com.galgolabs.earthweather.ui.dashboard.add.PlacesFragment"

@@ -4,33 +4,58 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.galgolabs.earthweather.databinding.FragmentNotificationsBinding
+import androidx.preference.DropDownPreference
+import androidx.preference.Preference
+import androidx.preference.Preference.OnPreferenceChangeListener
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
+import com.galgolabs.earthweather.R
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : PreferenceFragmentCompat(), OnPreferenceChangeListener {
 
-    private var _binding: FragmentNotificationsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
-
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.settings_layout, rootKey)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View {
+//        super.onCreateView(inflater, container, savedInstanceState)
+//        return view
+//    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireActivity().applicationContext)
+        val langDropDownPreference = preferenceManager.findPreference<DropDownPreference>("weather_lang")
+        val unitsDropDownPreference = preferenceManager.findPreference<DropDownPreference>("weather_unit")
+        val locationLangDropDownPreference = preferenceManager.findPreference<DropDownPreference>("location_lang")
+        unitsDropDownPreference?.onPreferenceChangeListener = this
+        langDropDownPreference?.onPreferenceChangeListener = this
+        locationLangDropDownPreference?.onPreferenceChangeListener = this
+    }
+
+
+
+    override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
+        when (preference.key){
+            "weather_lang" -> {
+                displayValue(preference.key, newValue)
+            }
+            "weather_unit" -> {
+                displayValue(preference.key, newValue)
+            }
+            "location_lang" -> {
+                displayValue(preference.key, newValue)
+            }
+        }
+        return true
+    }
+
+    private fun displayValue(key: String, newValue: Any?) {
+        println("Preference : $key")
+        println("Value : ${newValue.toString()}")
     }
 }

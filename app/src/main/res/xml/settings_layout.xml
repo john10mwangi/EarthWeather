@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:iconSpaceReserved="false"
+        android:title="@string/setting"
+        android:key="title_key"/>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/pref_weather">
+
+        <DropDownPreference
+            android:key="weather_lang"
+            app:iconSpaceReserved="false"
+            android:title="@string/pref_lang"
+            android:entries="@array/pref_lang_arr"
+            android:entryValues="@array/pref_lang_arr_values"
+            app:useSimpleSummaryProvider="true"/>
+
+        <DropDownPreference
+            android:key="weather_unit"
+            app:iconSpaceReserved="false"
+            android:title="@string/pref_unit"
+            android:entries="@array/pref_unit_arr"
+            android:entryValues="@array/pref_units_arr_values"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:iconSpaceReserved="false"
+        android:title="@string/pref_location">
+
+        <DropDownPreference
+            android:key="location_lang"
+            app:iconSpaceReserved="false"
+            android:title="@string/pref_lang"
+            android:entries="@array/pref_lang_arr"
+            android:entryValues="@array/pref_lang_arr_values"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>
