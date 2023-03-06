@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentPlacesBinding
+import com.galgolabs.earthweather.ui.dashboard.City
 import com.galgolabs.earthweather.ui.dashboard.add.placeholder.PlaceholderContent
 
 
@@ -15,7 +16,7 @@ import com.galgolabs.earthweather.ui.dashboard.add.placeholder.PlaceholderConten
  * TODO: Replace the implementation with code for your data type.
  */
 class PlacesRecyclerViewAdapter(
-    private val values: List<PlaceholderContent.PlaceholderItem>
+    private val values: List<City>
 ) : RecyclerView.Adapter<PlacesRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,11 +33,11 @@ class PlacesRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.idView.text = "CITY/TOWN"
-        holder.contentView.text = "COUNTRY"
+        holder.idView.text = item.name
+        holder.contentView.text = item.country
     }
 
-    override fun getItemCount(): Int = 30
+    override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(binding: FragmentPlacesBinding) : RecyclerView.ViewHolder(binding.root) {
         val idView: TextView = binding.itemNumber

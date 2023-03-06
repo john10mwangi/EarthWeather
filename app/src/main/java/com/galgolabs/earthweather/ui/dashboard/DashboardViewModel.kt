@@ -17,6 +17,7 @@ class DashboardViewModel(private var repository: Repository) : ViewModel() {
 
     fun addDummy(){
         var arr = ArrayList<City>()
+        val c0 = City(id = "bsfjhdy", name = "Current Position", country = "", lat = 0.00, lng = 0.00)
         val c1 = City(id = "bsfjhdy", name = "Nakuru", country = "Kenya", lat = -0.29761576183126925, lng = 36.07473749288049)
         val c2 = City(id = "mzfbdsk", name = "Nairobi", country = "Kenya", lat = -1.264076056115005, lng = 36.81717226278329)
         val c3 = City(id = "jdossld", name = "Kitale", country = "Kenya", lat = 1.022404978002921, lng = 34.99792358715327)
@@ -31,6 +32,7 @@ class DashboardViewModel(private var repository: Repository) : ViewModel() {
         val c13 = City(id = "yndkscv", name = "Bura", country = "Kenya", lat = -1.0943029169218002, lng = 39.94105843731054)
         val c14 = City(id = "iung9uy", name = "Garisa", country = "Kenya", lat = -0.4551553421687792, lng = 39.644207845851405)
 
+        arr.add(c0)
         arr.add(c1)
         arr.add(c2)
         arr.add(c12)

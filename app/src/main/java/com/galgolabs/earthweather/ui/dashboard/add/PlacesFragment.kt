@@ -8,9 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentPlacesListBinding
+import com.galgolabs.earthweather.ui.EarthWeather
+import com.galgolabs.earthweather.ui.dashboard.City
+import com.galgolabs.earthweather.ui.dashboard.DashboardViewModel
 import com.galgolabs.earthweather.ui.dashboard.add.placeholder.PlaceholderContent
+import com.galgolabs.earthweather.ui.home.HomeViewModelFactory
 
 /**
  * A fragment representing a list of Items.
@@ -32,18 +39,27 @@ class PlacesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_places_list, container, false)
-        binding = FragmentPlacesListBinding.inflate(inflater, container, false)
+        binding = FragmtenPlacesListBinding.inflate(inflater, container, false)
+        val viewModel : DashboardViewModel by viewModels{
+            HomeViewModelFactory(((requireActivity()).applicationContext as EarthWeather).repository)
+        }
 
         // Set the adapter
         with(binding.list) {
-            layoutManager = when {
-                columnCount <= 1 -> LinearLayoutManager(context)
-                else -> GridLayoutManager(context, columnCount)
-            }
-            adapter = PlacesRecyclerViewAdapter(PlaceholderContent.ITEMS)
+            addItemDecoration(
+                DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
+            )
+            addItemDecoration(
+                DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+            )
         }
-        return view
+        binding.list.layoutManager = GridLayoutManager(context, 2)
+        val obs = Observer<List<City>> {
+            binding.list.adapter = PlacesRecyclerViewAdapter(it)
+        }
+        viewModel.cities.observe(viewLifecycleOwner, obs)
+        viewModel.addDummy()
+        return binding.root
     }
 
     companion object {

@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/image_bg"
+        android:background="@drawable/bg_image_sky"
         tools:context=".ui.home.HomeFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="90dp"
+            android:background="@android:color/transparent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -30,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.locationName}"
+                android:background="@android:color/transparent"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -41,6 +43,7 @@
                 android:id="@+id/container_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 app:layout_constraintTop_toBottomOf="@+id/city_text"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
@@ -48,6 +51,7 @@
                     android:id="@+id/temp_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
                     android:text="@{viewModel.averageTemp}"
                     android:textColor="@color/white"
                     android:textSize="96sp"
@@ -61,6 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/degree_celcius"
+                    android:background="@android:color/transparent"
                     android:textColor="@color/white"
                     android:textSize="40sp"
                     android:layout_marginTop="20dp"
@@ -73,6 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/degree_celcius"
+                android:background="@android:color/transparent"
                 android:textSize="20sp"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/container_temp"
@@ -85,6 +91,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.forecast}"
                 android:textSize="20sp"
+                android:background="@android:color/transparent"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/temp_range_text"
@@ -98,6 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
             app:layout_constraintTop_toBottomOf="@+id/container_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -106,6 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/wind_title"
+                android:background="@android:color/transparent"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -116,6 +125,7 @@
                 android:id="@+id/wind_icon_view"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:background="@android:color/transparent"
                 app:srcCompat="@drawable/ic_baseline_air_24"
                 android:padding="12dp"
                 android:tint="@color/white"
@@ -127,6 +137,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
+                android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/wind_icon_view"
@@ -134,13 +145,15 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/wind_speed_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Wind Speed"
+                        android:background="@android:color/transparent"
                         android:textColor="@color/white"
                         android:gravity="start|center_vertical"
                         android:textSize="18sp"
@@ -155,6 +168,7 @@
                         android:layout_width="0dp"
                         android:gravity="end|center_vertical"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         android:text="@{viewModel.windSpeed}"
                         android:textColor="@color/white"
                         android:textSize="18sp"
@@ -169,7 +183,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/wind_direction_title"
@@ -177,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:text="Wind Direction"
                         android:textColor="@color/white"
+                        android:background="@android:color/transparent"
                         android:gravity="start|center_vertical"
                         android:textSize="18sp"
                         android:layout_marginTop="20dp"
@@ -190,6 +206,7 @@
                         android:layout_width="0dp"
                         android:gravity="end|center_vertical"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         android:text="@{viewModel.windDirection}"
                         android:textColor="@color/white"
                         android:textSize="18sp"
@@ -208,6 +225,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
             app:layout_constraintTop_toBottomOf="@+id/container_content_wind"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -216,6 +234,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sun"
+                android:background="@android:color/transparent"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent"
@@ -227,6 +246,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
+                android:background="@android:color/transparent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -234,7 +254,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/sun_rise_title"
@@ -242,6 +263,7 @@
                         android:layout_height="wrap_content"
                         android:text="Wind Speed"
                         android:textColor="@color/white"
+                        android:background="@android:color/transparent"
                         android:gravity="start|center_vertical"
                         android:textSize="18sp"
                         android:layout_marginTop="20dp"
@@ -257,6 +279,7 @@
                         android:layout_height="wrap_content"
                         android:text="@{viewModel.sunRise}"
                         android:textColor="@color/white"
+                        android:background="@android:color/transparent"
                         android:textSize="18sp"
                         android:layout_marginTop="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -269,7 +292,8 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/sun_set_title"
@@ -277,6 +301,7 @@
                         android:layout_height="wrap_content"
                         android:text="Wind Speed"
                         android:textColor="@color/white"
+                        android:background="@android:color/transparent"
                         android:gravity="start|center_vertical"
                         android:textSize="18sp"
                         android:layout_marginTop="20dp"
@@ -290,6 +315,7 @@
                         android:layout_width="0dp"
                         android:gravity="end|center_vertical"
                         android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
                         android:text="@{viewModel.sunSet}"
                         android:textColor="@color/white"
                         android:textSize="18sp"
@@ -304,6 +330,7 @@
 
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
     
 </layout>

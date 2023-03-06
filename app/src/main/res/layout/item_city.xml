@@ -25,7 +25,7 @@
         android:layout_margin="4dp"
         app:cardUseCompatPadding="true"
         android:onClick="@{() -> clickCallback.onItemClickedCallback(city)}"
-        android:background="@color/cardview_dark_background"
+        app:cardBackgroundColor="@color/app_backround"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
