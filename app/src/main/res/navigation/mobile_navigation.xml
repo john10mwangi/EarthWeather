@@ -56,7 +56,7 @@
         <action
             android:id="@+id/action_navigation_dashboard_to_placesFragment"
             app:destination="@id/placesFragment"
-            app:popUpTo="@id/navigation_dashboard" />
+            app:popUpTo="@id/navigation_city" />
     </fragment>
 
     <fragment
