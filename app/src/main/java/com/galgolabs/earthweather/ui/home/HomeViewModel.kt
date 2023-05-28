@@ -1,23 +1,20 @@
 package com.galgolabs.earthweather.ui.home
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.databinding.Observable
 import androidx.lifecycle.*
 import com.galgolabs.earthweather.ui.CompassUtil
-import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.UtilDate
 import com.galgolabs.earthweather.ui.dashboard.DashboardViewModel
-import com.galgolabs.earthweather.ui.localDB.MiniClimate
-import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.*
 
 //@HiltViewModel
 class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
+    private val CONSTCONVERT: Float = 1.609344F
     private var compassUtil = CompassUtil()
     private var utilDate = UtilDate()
 
@@ -31,6 +28,7 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     var sunSet: MutableLiveData<String> = MutableLiveData()
     var sunRise: MutableLiveData<String> = MutableLiveData()
     var forecast: MutableLiveData<String> = MutableLiveData()
+    var humidity: MutableLiveData<Int> = MutableLiveData()
 
     var refreshNeeded : MutableLiveData<Long> = repo.res
 
@@ -45,7 +43,8 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     var fetchResult: MutableLiveData<NetworkResponse> = repo.result
 
     //
-    fun fetchMyLocation(lat: Double, lng: Double, preferences: SharedPreferences, isFromTown: Boolean = false) {
+    fun fetchMyLocation(lat: Double, lng: Double,
+                        preferences: SharedPreferences, isFromTown: Boolean = false) {
         sharedPreferences = preferences
         val lastUpdate = preferences.getLong("lastUpdate", 0)
         val now = System.currentTimeMillis()
@@ -76,7 +75,8 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun devolve(weatherData: WeatherData) {
+    fun devolve(weatherData: WeatherData, preferences: SharedPreferences) {
+        sharedPreferences = preferences
         try {
             val now = System.currentTimeMillis()
             viewModelScope.launch{
@@ -88,27 +88,24 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
         }
     }
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun populate(weatherData: MiniWeatherData) {
         locationName.value = weatherData.climate.name
         averageTemp.value = weatherData.main.temp.toString()
-        rangeTemp.value = weatherData.main.temp_max.toString()+
-                " - "+weatherData.main.temp_min.toString()
+        rangeTemp.value = String.format(Locale.getDefault(), "%.0f / %.0f",
+            weatherData.main.temp_min,weatherData.main.temp_max)
         forecast.value = weatherData.weather[0].main
         averageTemp.value = weatherData.main.temp.toString()
+        humidity.value = weatherData.main.humidity
 
         val direction = compassUtil.degreesToCampassDirection(weatherData.wind.deg)
         windDirection.value = direction.toString()
 
-        val timeRise = utilDate.milliToHoursAndMinutes(weatherData.sys.sunrise)
-        sunRise.value = timeRise
+        sunRise.value = utilDate.longToDate(weatherData.sys.sunrise)
+        sunSet.value = utilDate.longToDate(weatherData.sys.sunset)
 
-        val timeSet = utilDate.milliToHoursAndMinutes(weatherData.sys.sunset)
-        sunSet.value = timeSet
-
-        val speed = weatherData.wind.speed.toString()+" m/s"
+        val speed = String.format(Locale.getDefault(), "%.0f KM/H",
+            (weatherData.wind.speed * CONSTCONVERT))
         windSpeed.value = speed
     }
 

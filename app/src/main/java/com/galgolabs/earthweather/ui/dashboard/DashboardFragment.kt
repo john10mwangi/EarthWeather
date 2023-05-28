@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.galgolabs.earthweather.R
 
@@ -77,6 +78,22 @@ class DashboardFragment : Fragment(), ItemSelectedCallback, SearchView.OnQueryTe
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (arguments?.isEmpty == false){
+            val t = arguments?.getString("myCityName")
+            val lat = arguments?.getFloat("myCityLat")
+            val lng = arguments?.getFloat("myCityLng")
+            println("onResume : $t, $lat, $lng")
+            if (!t.isNullOrEmpty() && lat != null && lng != null){
+                val direction = DashboardFragmentDirections.
+                actionNavigationDashboardToNavigationHome2(myCityName = t,
+                    myCityLat = lat, myCityLng = lng,refreshCity = true)
+                backHome(direction)
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -84,7 +101,12 @@ class DashboardFragment : Fragment(), ItemSelectedCallback, SearchView.OnQueryTe
 
     override fun onSelection(city: City) {
         val direction = DashboardFragmentDirections.
-        actionNavigationDashboardToNavigationHome2(myCityName = city.name, myCityLat = city.lat.toFloat(), myCityLng = city.lng.toFloat(),refreshCity = true)
+        actionNavigationDashboardToNavigationHome2(myCityName = city.name,
+            myCityLat = city.lat.toFloat(), myCityLng = city.lng.toFloat(),refreshCity = true)
+        backHome(direction)
+    }
+
+    fun backHome(direction: NavDirections){
         findNavController().navigate(directions = direction)
     }
 

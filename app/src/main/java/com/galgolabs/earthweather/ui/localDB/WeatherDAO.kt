@@ -49,6 +49,7 @@ interface WeatherDAO {
     @Transaction
     suspend fun createWeatherData(climate: WeatherData) : Long{
         val climateId = create(MiniClimate(climate.id, climate.name, climate.cod, climate.visibility, climate.dt))
+        println("createWeatherData : $climateId")
         val weathers = ArrayList<MiniWeather>()
         for (miniWeather in climate.weather){
             weathers.add(MiniWeather(parentId = climateId, main = miniWeather.main, description = miniWeather.description))
@@ -69,9 +70,9 @@ interface WeatherDAO {
 
         create(MiniCloud(parentId = climateId, all = climate.clouds.all))
 
-        val ret = create(MiniWind(parentId = climateId, speed = climate.wind.speed, deg = climate.wind.deg, gust = climate.wind.gust))
+        create(MiniWind(parentId = climateId, speed = climate.wind.speed, deg = climate.wind.deg, gust = climate.wind.gust))
 
-        return ret
+        return climateId
     }
 
 
