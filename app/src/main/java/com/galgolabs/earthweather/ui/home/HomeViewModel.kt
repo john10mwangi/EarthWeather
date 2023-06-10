@@ -88,7 +88,7 @@ class HomeViewModel(private val repo: Repository) : ViewModel(), Observable {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+//    @RequiresApi(Build.VERSION_CODES.O)
     fun populate(weatherData: MiniWeatherData) {
         locationName.value = weatherData.climate.name
         averageTemp.value = weatherData.main.temp.toString()

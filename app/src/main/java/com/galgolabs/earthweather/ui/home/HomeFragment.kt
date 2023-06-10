@@ -135,8 +135,10 @@ class HomeFragment : Fragment() {
 
         if (ContextCompat.checkSelfPermission(
                 requireActivity().applicationContext, reqPerms[0]) == PackageManager.PERMISSION_GRANTED){
+            println("Permission granted")
             lastLoc()
         }else {
+            println("Permission not granted")
             locationPermissionRequest.launch(arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION))
@@ -165,8 +167,9 @@ class HomeFragment : Fragment() {
         homeViewModel.refreshNeeded.observe(viewLifecycleOwner, observeInsert)
 
         val obsWeather = Observer<MiniWeatherData> {
-//            println("obsWeather : ${it}")
             viewModel.populate(it)
+
+            println("humidity : ${homeViewModel.humidity.value}")
         }
         homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
         return binding.root
@@ -188,7 +191,8 @@ class HomeFragment : Fragment() {
         binding.gauge.addRange(range)
         binding.gauge.minValue = 0.0
         binding.gauge.maxValue = 100.0
-//        binding.gauge.value = 45.0
+        homeViewModel.humidity.observe(viewLifecycleOwner
+        ) { t -> binding.gauge.value = t.toDouble() }
     }
 
     override fun onResume() {
