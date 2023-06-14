@@ -164,8 +164,11 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.refreshNeeded.observe(viewLifecycleOwner, observeInsert)
 
+        homeViewModel.humidity.observe(viewLifecycleOwner, Observer {
+            binding.gauge.value = it.toDouble()
+        })
+
         val obsWeather = Observer<MiniWeatherData> {
-//            println("obsWeather : ${it}")
             viewModel.populate(it)
         }
         homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
@@ -182,13 +185,24 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val range = Range()
-        range.color = Color.MAGENTA
+        range.color = Color.parseColor("#E3E500")
         range.from = 0.0
-        range.to = 100.0
+        range.to = 30.0
+
+        val range2 = Range()
+        range2.color = Color.parseColor("#00b20b")
+        range2.from = 30.0
+        range2.to = 65.0
+
+        val range3 = Range()
+        range3.color = Color.parseColor("#ce0000")
+        range3.from = 65.0
+        range3.to = 100.0
         binding.gauge.addRange(range)
-        binding.gauge.minValue = 0.0
-        binding.gauge.maxValue = 100.0
-//        binding.gauge.value = 45.0
+        binding.gauge.addRange(range2)
+        binding.gauge.addRange(range3)
+        binding.gauge.setMinValue(0.0)
+        binding.gauge.setMaxValue(100.0)
     }
 
     override fun onResume() {

@@ -12,11 +12,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_image_sky"
             tools:context=".ui.home.HomeFragment">
 
@@ -105,12 +105,32 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/container_content_graphs"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/holo_blue_bright"
+                app:layout_constraintTop_toBottomOf="@+id/container_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <com.db.williamchart.view.LineChartView
+                    android:id="@+id/chart1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:chart_lineColor="@color/black"
+                    app:chart_lineThickness="2dp"
+                    app:chart_smoothLine= "true"
+                />
+                
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/container_content_wind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
-                app:layout_constraintTop_toBottomOf="@+id/container_content"
+                app:layout_constraintTop_toBottomOf="@+id/container_content_graphs"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
                 <com.google.android.material.textview.MaterialTextView
@@ -260,11 +280,10 @@
                     app:layout_constraintStart_toStartOf="parent"
                     />
 
-                <com.ekn.gruzer.gaugelibrary.ArcGauge
+                <com.ekn.gruzer.gaugelibrary.HalfGauge
                     android:id="@+id/gauge"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:value="{viewModel.humidity}"
                     android:background="@android:color/transparent"
                     app:layout_constraintTop_toBottomOf="@id/comfort_section_humidity"
                     app:layout_constraintStart_toStartOf="parent"
