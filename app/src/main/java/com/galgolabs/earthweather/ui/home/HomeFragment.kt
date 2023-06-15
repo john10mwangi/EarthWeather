@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
             ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
 
-    val reqPerms = arrayOf(
+    private val reqPerms = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -180,8 +180,6 @@ class HomeFragment : Fragment() {
         cityLng = arguments?.getFloat("myCityLng")
         cityLat = arguments?.getFloat("myCityLat")
         cityName = arguments?.getString("myCityName")
-
-        println("onItemClickedCallback : ${cityName} - LatLng (${cityLat},${cityLng})")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -199,11 +197,12 @@ class HomeFragment : Fragment() {
         range3.color = Color.parseColor("#ce0000")
         range3.from = 65.0
         range3.to = 100.0
+
         binding.gauge.addRange(range)
         binding.gauge.addRange(range2)
         binding.gauge.addRange(range3)
-        binding.gauge.setMinValue(0.0)
-        binding.gauge.setMaxValue(100.0)
+        binding.gauge.minValue = 0.0
+        binding.gauge.maxValue = 100.0
     }
 
     override fun onResume() {
@@ -212,8 +211,6 @@ class HomeFragment : Fragment() {
         val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
         mActionBar?.hide()
         if (mIsRefreshing){
-
-            println("mIsRefreshing : ${mIsRefreshing}")
             try {
                 getArgs()
                 fetch(cityLat!!.toDouble(),
