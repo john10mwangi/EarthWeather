@@ -169,6 +169,7 @@ class HomeFragment : Fragment() {
         })
 
         val obsWeather = Observer<MiniWeatherData> {
+//            println("obsWeather : ${it}")
             viewModel.populate(it)
         }
         homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
