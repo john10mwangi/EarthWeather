@@ -27,7 +27,9 @@
     <string name="pref_location">Location</string>
     <string name="pref_unit">Units</string>
     <string name="pref_lang">Language</string>
-<!--    <string name="app_name">EarthWeather</string>-->
+    <string name="comform_title">Comfort Level</string>
+    <string name="humid_title">Humidity</string>
+    <!--    <string name="app_name">EarthWeather</string>-->
 <!--    -->
     <string-array name="pref_lang_arr">
         <item>English</item>

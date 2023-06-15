@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.os.Build
@@ -12,7 +13,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
@@ -21,20 +21,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.work.*
+import com.ekn.gruzer.gaugelibrary.Range
 import com.galgolabs.earthweather.MainActivity
 import com.galgolabs.earthweather.R
 import com.galgolabs.earthweather.databinding.FragmentHomeBinding
 import com.galgolabs.earthweather.ui.EarthWeather
 import com.galgolabs.earthweather.ui.WeatherWorkScheduler
-import com.galgolabs.earthweather.ui.localDB.MiniClimate
-import com.galgolabs.earthweather.ui.localDB.MiniWeather
 import com.galgolabs.earthweather.ui.localDB.MiniWeatherData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.gson.Gson
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
@@ -110,7 +106,7 @@ class HomeFragment : Fragment() {
             ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
 
-    val reqPerms = arrayOf(
+    private val reqPerms = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -133,13 +129,12 @@ class HomeFragment : Fragment() {
         _binding = DataBindingUtil.bind(view)
         preferences = requireActivity().getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE)
 //        val root: View = binding.root
-        binding.lifecycleOwner = viewLifecycleOwner
+        viewLifecycleOwner.also { binding.lifecycleOwner = it }
 
         binding.viewModel = homeViewModel
 
         if (ContextCompat.checkSelfPermission(
                 requireActivity().applicationContext, reqPerms[0]) == PackageManager.PERMISSION_GRANTED){
-//            Toast.makeText(requireActivity(), "granted", Toast.LENGTH_SHORT).show()
             lastLoc()
         }else {
             locationPermissionRequest.launch(arrayOf(
@@ -149,20 +144,19 @@ class HomeFragment : Fragment() {
 
         val obs = Observer<NetworkResponse> {
             println("Returned object is : ${it.weatherData.name}")
-            homeViewModel.devolve(it.weatherData)
+            homeViewModel.devolve(it.weatherData, preferences)
         }
         homeViewModel.fetchResult.observe(viewLifecycleOwner, obs)
 
-        val observerAll = Observer<List<MiniWeatherData>> {
-            if (it.size != 0){
-                homeViewModel.populate(it[0])
-                val gson = Gson()
-                val weatherGson = gson.toJson(it[0])
-                preferences.edit().putString("pref_weather", weatherGson).apply()
-            }
-        }
-        homeViewModel.allWeather.observe(viewLifecycleOwner, observerAll)
-
+//        val observerAll = Observer<List<MiniWeatherData>> {
+//            if (it.size != 0){
+//                homeViewModel.populate(it[0])
+//                val gson = Gson()
+//                val weatherGson = gson.toJson(it[0])
+//                preferences.edit().putString("pref_weather", weatherGson).apply()
+//            }
+//        }
+//        homeViewModel.allWeather.observe(viewLifecycleOwner, observerAll)
 
         val observeInsert = Observer<Long> {
             println("observeInsert : ${it}")
@@ -170,20 +164,45 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.refreshNeeded.observe(viewLifecycleOwner, observeInsert)
 
+        homeViewModel.humidity.observe(viewLifecycleOwner, Observer {
+            binding.gauge.value = it.toDouble()
+        })
+
         val obsWeather = Observer<MiniWeatherData> {
-            println("obsWeather : ${it}")
-//            homeViewModel.fetchById(it)
+//            println("obsWeather : ${it}")
+            viewModel.populate(it)
         }
         homeViewModel.weather.observe(viewLifecycleOwner, obsWeather)
-        return view
+        return binding.root
     }
 
     private fun getArgs() {
         cityLng = arguments?.getFloat("myCityLng")
         cityLat = arguments?.getFloat("myCityLat")
         cityName = arguments?.getString("myCityName")
+    }
 
-        println("onItemClickedCallback : ${cityName} - LatLng (${cityLat},${cityLng})")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val range = Range()
+        range.color = Color.parseColor("#E3E500")
+        range.from = 0.0
+        range.to = 30.0
+
+        val range2 = Range()
+        range2.color = Color.parseColor("#00b20b")
+        range2.from = 30.0
+        range2.to = 65.0
+
+        val range3 = Range()
+        range3.color = Color.parseColor("#ce0000")
+        range3.from = 65.0
+        range3.to = 100.0
+
+        binding.gauge.addRange(range)
+        binding.gauge.addRange(range2)
+        binding.gauge.addRange(range3)
+        binding.gauge.minValue = 0.0
+        binding.gauge.maxValue = 100.0
     }
 
     override fun onResume() {
@@ -192,8 +211,6 @@ class HomeFragment : Fragment() {
         val mActionBar: ActionBar? = (requireActivity() as MainActivity).supportActionBar
         mActionBar?.hide()
         if (mIsRefreshing){
-
-            println("mIsRefreshing : ${mIsRefreshing}")
             try {
                 getArgs()
                 fetch(cityLat!!.toDouble(),

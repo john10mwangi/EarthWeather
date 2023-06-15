@@ -7,9 +7,6 @@ import com.galgolabs.earthweather.ui.home.TownData
 import com.galgolabs.earthweather.ui.home.WeatherData
 
 class WebServices {
-    private val urlStr = "https://api.openweathermap.org/data/2.5/weather?lat=-0.29473234067640336&lon=36.13100872582516&appid=17ffb6660023c4cd2d7e3fb43c9960c3&mode=xml"
-    private val baseUrl = "https://api.openweathermap.org/data/2.5/weather?"
-    private val apiKey = "17ffb6660023c4cd2d7e3fb43c9960c3"
     private val returnMode = "json"
     private val returnUnit = "metric"
     private val returnLang = "en"
@@ -46,7 +43,9 @@ class WebServices {
             val  response = api.getTown(path = "search",key = "pk.65543f2ae9fb6a50584ac5d4e0eed386", q = value, format = returnMode)
 
             if (response.isSuccessful){
-                response.body()?.let { callback.onRetrievedSuccess(data= it) }
+                response.body()?.let {
+                    callback.onRetrievedSuccess(it)
+                }
                 println("Places are : ${response.body().toString()}")
             }else {
                 println("Failed")
